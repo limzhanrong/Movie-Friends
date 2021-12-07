@@ -1,6 +1,6 @@
 import React, { useState, createContext , useEffect, useReducer } from 'react'
 import serverAPI from '../APIs/serverAPI'
-import { reducer } from './reducer'
+import { reducer, AddToWatchListModalReducer } from './reducer'
 
 export const AuthContext = createContext()
 
@@ -76,6 +76,26 @@ export const SnackBarProvider = (props) => {
         <SnackBarContext.Provider value={{snackBar: snackBar, dispatch: dispatch}}>
             {props.children}
         </SnackBarContext.Provider>
+    )
+}
+
+export const AddToWatchListModalContext = createContext()
+
+export const AddToWatchListModalProvider = (props) => {
+    const initialState = {open: false}
+    const [userWatchLists,setUserWatchLists] = useState([])
+    const [watchListModalState, watchListModalDispatch] = useReducer(AddToWatchListModalReducer, initialState)
+    useEffect(()=>{
+        setUserWatchLists(["a","b","c","d"])
+    },[])
+    return (
+        <AddToWatchListModalContext.Provider value={{
+            watchListModalState: watchListModalState, 
+            watchListModalDispatch: watchListModalDispatch,
+            useUserWatchListState : [userWatchLists, setUserWatchLists]
+            }}>
+            {props.children}
+        </AddToWatchListModalContext.Provider>
     )
 }
 

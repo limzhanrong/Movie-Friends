@@ -23,7 +23,7 @@ export default function ActionAreaCard({movieObject}) {
   return (
     <Card className="media-card" key={movieObject.id} onClick={()=>redirect(link)} sx={{marginBottom:"5px"}}>
         <CardActionArea sx={{PointerEvent:"none"}}>
-        <MediaDropDown sx={{position:"absolute", width:"100px", height:"100px"}}/>
+        <MediaDropDown movieObject={movieObject} sx={{position:"absolute", width:"100px", height:"100px"}}/>
         <CardMedia 
           sx={{minHeight:223}}
           className="media-image"

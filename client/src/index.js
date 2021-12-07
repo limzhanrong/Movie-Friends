@@ -4,13 +4,15 @@ import './css/styles.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { SnackBarProvider } from './global/StateContext'
+import { SnackBarProvider, AddToWatchListModalProvider } from './global/StateContext'
 
 
 ReactDOM.render(
   <React.StrictMode>
     <SnackBarProvider>
-    <App />
+    <AddToWatchListModalProvider>
+      <App />
+    </AddToWatchListModalProvider>
     </SnackBarProvider>
   </React.StrictMode>,
   document.getElementById('root')

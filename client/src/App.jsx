@@ -17,8 +17,9 @@ import Movie from "./routes/Movie";
 import Lists from "./routes/UserLists";
 import ListSingle from "./routes/ListSingle";
 
-import {AuthProvider, SnackBarContext} from "./global/StateContext";
+import {AuthProvider, SnackBarContext, AddToWatchListModalContext} from "./global/StateContext";
 import SnackBarCustom from "./components/SnackBarCustom";
+import AddToWatchListModal from "./components/AddToWatchListModal"
 
 
 
@@ -46,6 +47,8 @@ const theme = createTheme({
 
 export default function App() {
   const { snackBar, dispatch } = useContext(SnackBarContext)
+  const { watchListModalState, watchListModalDispatch } = useContext(AddToWatchListModalContext)
+  
   return (
     <ThemeProvider theme={theme}>
     <Router>
@@ -61,6 +64,7 @@ export default function App() {
             <Route path='*' exact={true} component={Login} />
           </Switch>
           <SnackBarCustom snackBar={snackBar} handleClose={()=>dispatch({type:"CLOSE_SNACKBAR"})}></SnackBarCustom>
+          <AddToWatchListModal watchListModalState={watchListModalState} handleClose={()=>watchListModalDispatch({type:"CLOSE_ADD_TO_WATCH_LIST_MODAL"})}></AddToWatchListModal>
         </AuthProvider>
     </Router>
     </ThemeProvider>
