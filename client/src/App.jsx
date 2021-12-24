@@ -47,7 +47,7 @@ const theme = createTheme({
 
 export default function App() {
   const { snackBar, dispatch } = useContext(SnackBarContext)
-  const { watchListModalState, watchListModalDispatch } = useContext(AddToWatchListModalContext)
+  const { watchListModalDispatch } = useContext(AddToWatchListModalContext)
   
   return (
     <ThemeProvider theme={theme}>
@@ -64,7 +64,7 @@ export default function App() {
             <Route path='*' exact={true} component={Login} />
           </Switch>
           <SnackBarCustom snackBar={snackBar} handleClose={()=>dispatch({type:"CLOSE_SNACKBAR"})}></SnackBarCustom>
-          <AddToWatchListModal watchListModalState={watchListModalState} handleClose={()=>watchListModalDispatch({type:"CLOSE_ADD_TO_WATCH_LIST_MODAL"})}></AddToWatchListModal>
+          <AddToWatchListModal handleClose={()=>watchListModalDispatch({type:"CLOSE_ADD_TO_WATCH_LIST_MODAL"})}></AddToWatchListModal>
         </AuthProvider>
     </Router>
     </ThemeProvider>

@@ -62,7 +62,7 @@ const Lists = () => {
                         <AllUserLists isOwner={isOwner} loading={loading} userList={userList} getUserList={getUserList}/>
                     </Grid>
                 </Box>
-                <CreateListDialog open={open} handleClose={handleClose} getUserList={getUserList}></CreateListDialog>
+                <CreateListDialog open={open} setOpen={setOpen} handleClose={handleClose} getUserList={getUserList}></CreateListDialog>
             </>     
 
     )

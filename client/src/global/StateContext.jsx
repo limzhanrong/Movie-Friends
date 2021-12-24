@@ -1,4 +1,4 @@
-import React, { useState, createContext , useEffect, useReducer } from 'react'
+import React, { useState, createContext , useEffect, useReducer, useCallback } from 'react'
 import serverAPI from '../APIs/serverAPI'
 import { reducer, AddToWatchListModalReducer } from './reducer'
 
@@ -36,16 +36,16 @@ export const AuthProvider = (props) => {
           }
     }
 
+    // Adds Axios interceptors for 401 and 403 requests
+
     useEffect(() => {
         const serverInterceptor = serverAPI.interceptors.response.use(undefined, (error) => {
             console.log('intercepted: ', error.response);
-            if(error.response.status === 401){
+            if(error.response.status === 401 || error.response.status === 403){
                 logout()
             }
             return Promise.reject(error);
         });
-
-        
 
         const token = localStorage.getItem('token');
         if(token){
@@ -56,7 +56,6 @@ export const AuthProvider = (props) => {
         return () => {
             serverAPI.interceptors.response.eject(serverInterceptor)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
@@ -82,17 +81,46 @@ export const SnackBarProvider = (props) => {
 export const AddToWatchListModalContext = createContext()
 
 export const AddToWatchListModalProvider = (props) => {
-    const initialState = {open: false}
+    const initialState = {open: false, mediaToAdd:null}
     const [userWatchLists,setUserWatchLists] = useState([])
     const [watchListModalState, watchListModalDispatch] = useReducer(AddToWatchListModalReducer, initialState)
+
+    const memoizedFetchUserWatchList = useCallback(
+        (token, filmId, filmType) => {
+            fetchUserWatchlist(token, filmId, filmType)
+    },[]);
+    
+    async function fetchUserWatchlist(token, filmId, filmType) {
+        try{
+            const response = await serverAPI.post('/api/list/authenticated/retrieveListsWithFilmIdExistance',{
+                token: token,
+                filmId,
+                filmType
+            })
+            console.log('Fetch user watchlist:', response.data.rows)
+            if(response){
+                setUserWatchLists(response.data.rows)
+            }
+            }catch(err){
+            console.log("fetch user watchlist failed: " + err)
+            } 
+    }
+
     useEffect(()=>{
-        setUserWatchLists(["a","b","c","d"])
-    },[])
+        const token = localStorage.getItem('token');
+        if(token){
+            memoizedFetchUserWatchList(token)
+        }
+    },[memoizedFetchUserWatchList])
+
+    
     return (
         <AddToWatchListModalContext.Provider value={{
-            watchListModalState: watchListModalState, 
-            watchListModalDispatch: watchListModalDispatch,
-            useUserWatchListState : [userWatchLists, setUserWatchLists]
+            watchListModalState, 
+            watchListModalDispatch,
+            fetchUserWatchlist,
+            useUserWatchListState : [userWatchLists, setUserWatchLists],
+            memoizedFetchUserWatchList
             }}>
             {props.children}
         </AddToWatchListModalContext.Provider>

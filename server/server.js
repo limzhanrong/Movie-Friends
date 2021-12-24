@@ -14,10 +14,6 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json())
 app.use(cors())
-// app.use(express.urlencoded());
-// app.get('/', (req, res) => {
-//     res.send('Hello World!')
-//   })
 
 app.use('/api/tmdb', TMDB_Routes)
 app.use('/api/user', User_Routes)

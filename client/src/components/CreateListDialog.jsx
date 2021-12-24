@@ -2,9 +2,15 @@ import React, {useState} from 'react'
 import { Dialog, DialogTitle, DialogContent , TextField, DialogActions, Button } from '@mui/material'
 import serverAPI from '../APIs/serverAPI'
 
-const CreateListDialog = ({ open, handleClose, getUserList }) => {
+const CreateListDialog = ({ open, setOpen, getUserList }) => {
     const [inputTitle, setInputTitle] = useState("") 
     const [inputDescription, setInputDescription] = useState("") 
+
+    const handleClose = () =>{
+        setInputTitle("")
+        setInputDescription("")
+        setOpen(false)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -43,6 +49,7 @@ const CreateListDialog = ({ open, handleClose, getUserList }) => {
                 />
                 <TextField
                     sx={{marginTop: "1.5rem"}}
+                    value = {inputDescription}
                     id="outlined-multiline-static"
                     label="desription"
                     multiline

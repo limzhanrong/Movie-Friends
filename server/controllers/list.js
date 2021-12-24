@@ -1,7 +1,7 @@
 const db = require('../db/index')
 require('dotenv').config();
 // Retrieve all lists owned by a user
-const getUserLists = async (req,res) => {
+const getListsByUsername = async (req,res) => {
     try{
         const { username } = req.params
         const list = await retrieveListsByUsername(username)
@@ -21,6 +21,24 @@ const getUserLists = async (req,res) => {
         console.log(err)
     }
 }
+
+// Retrieve all lists owned by an authenticated user and whether the film id is in the watchlist
+// Will retrieve all Lists owned by user, with additional columns list_id, film_id and film_type. Value will be null if show is not in watchlist
+const retrieveListsWithFilmIdExistance = async (req,res) => {
+    try{
+        const userId = req.user.user_id
+        const { filmId, filmType } = req.body
+        const q = "SELECT * FROM lists LEFT JOIN lists_films ON lists.id = lists_films.list_id AND lists.user_id = $1 AND ( (lists_films.film_id = $2 AND lists_films.film_type = $3) OR lists_films.film_id IS NULL)"
+        const response = await db.query(q, [userId, filmId, filmType]);
+        const list = response
+        // if(!list) throw "No such list!"
+        res.status(200).send(list)
+    }catch(err){
+        console.log(err)
+        return res.status(404).send(err)
+    }
+}
+
 // Retrieve a single list based on its ID
 const getListById = async (req,res) => {
     try{
@@ -57,11 +75,11 @@ const createList = async (req,res) => {
 }
 
 const deleteList = async (req,res) => {
-    const userID = req.user.user_id
-    const inputID = req.body.inputID
+    const userId = req.user.user_id
+    const inputId = req.body.inputID
     try{
         const q = 'DELETE FROM lists WHERE id=$1 AND user_id = $2 RETURNING *';
-        const values = [inputID, userID];
+        const values = [inputId, userId];
         const response = await db.query(q, values);
         return res.status(200).send({
             status: "success",
@@ -73,11 +91,8 @@ const deleteList = async (req,res) => {
     }
 }
 
-// Unused, remove later
 const getAuthenticatedUserLists =  async (req, res) =>{
-    console.log(req.user)
     const list = await retrieveListsByUsername(req.user.username)
-    console.log(list)
     if(!list){
         return res.status(200).send({
             username: req.user.username,
@@ -91,12 +106,54 @@ const getAuthenticatedUserLists =  async (req, res) =>{
     })
 }
 
+
+const toggleShowFromWatchlist =  async (req, res) =>{
+    const listID = req.body.listID
+    const filmID = req.body.filmID
+    const filmType = req.body.filmType
+    let response
+    let action
+    console.log('toggle')
+    try{
+        // let q = 'SELECT * FROM lists_films WHERE list_id = $1 AND film_id=$2 AND film_type = $2 RETURNING *';
+        let q = "SELECT 1 FROM lists_films WHERE list_id = $1 AND film_id=$2 AND film_type = $3 LIMIT 1";
+        let values = [listID, filmID, filmType];
+        console.log(values)
+        let exists = await db.query(q, values);
+        // console.log(exists.rows.length > 0)
+        if (exists.rows.length > 0) {
+            console.log('exists')
+            q = 'DELETE FROM lists_films WHERE list_id = $1 AND film_id=$2 AND film_type = $3 RETURNING *';
+            response = await db.query(q, values)
+            action="delete"
+        }else{
+            console.log('not exists')
+            q = 'INSERT INTO lists_films(list_id, film_id, film_type) values($1,$2,$3) RETURNING *';
+            response = await db.query(q, values)
+            action="add"
+        }
+        return res.status(200).send({
+            status: "success",
+            response: response.rows,
+            action: action
+        })
+    }catch(err){
+        console.log("Insert show to watchlist failed, this is the error message: ", err)
+        return res.status(500).send({
+            status: "fail",
+            error: err
+        })
+    }
+}
+
 module.exports = {
     createList,
-    getUserLists,
+    getListsByUsername,
     getAuthenticatedUserLists,
     deleteList,
-    getListById
+    getListById,
+    retrieveListsWithFilmIdExistance,
+    toggleShowFromWatchlist
 }
 
 // Helper functions
