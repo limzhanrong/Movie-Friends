@@ -1,7 +1,6 @@
 import React from 'react'
 import MovieSlider from '../components/MovieSlider';
 import TrendingSection from '../components/TrendingSection';
-import {Button} from '@mui/material';
 
 const Home = () => {
     return (
@@ -11,7 +10,6 @@ const Home = () => {
                 <MovieSlider endPoint="api/tmdb/popular/1">Popular</MovieSlider>
             </div>
             <TrendingSection></TrendingSection>
-            <Button variant="contained">Button</Button>
         </div>
     )
 }
