@@ -4,7 +4,7 @@ import { CardActionArea, CardContent, CardMedia, Typography, Card } from '@mui/m
 import { useHistory } from "react-router-dom"
 
 
-export default function ActionAreaCard({movieObject}) {
+export default function MediaCard({movieObject}) {
   const [image, setImage] = useState()
   const [link, setLink] = useState("")
   const history = useHistory()

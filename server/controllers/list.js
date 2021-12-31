@@ -1,3 +1,4 @@
+const { response } = require('express');
 const db = require('../db/index')
 require('dotenv').config();
 // Retrieve all lists owned by a user
@@ -113,14 +114,11 @@ const toggleShowFromWatchlist =  async (req, res) =>{
     const filmType = req.body.filmType
     let response
     let action
-    console.log('toggle')
     try{
         // let q = 'SELECT * FROM lists_films WHERE list_id = $1 AND film_id=$2 AND film_type = $2 RETURNING *';
         let q = "SELECT 1 FROM lists_films WHERE list_id = $1 AND film_id=$2 AND film_type = $3 LIMIT 1";
         let values = [listID, filmID, filmType];
-        console.log(values)
         let exists = await db.query(q, values);
-        // console.log(exists.rows.length > 0)
         if (exists.rows.length > 0) {
             console.log('exists')
             q = 'DELETE FROM lists_films WHERE list_id = $1 AND film_id=$2 AND film_type = $3 RETURNING *';
@@ -146,6 +144,24 @@ const toggleShowFromWatchlist =  async (req, res) =>{
     }
 }
 
+const getMediaFromWatchlist = async (req, res) => {
+    // Get list_id, film_id and media type
+    try{
+        const {listID} = req.params
+        let q = "SELECT * FROM lists_films WHERE list_id = $1"
+        const response = await db.query(q, [listID])
+        res.status(200).send({
+            status:"success",
+            response: response.rows
+        })
+    }catch(err){
+        return res.status(500).send({
+            status: "fail",
+            error: err
+        })
+    }
+}
+
 module.exports = {
     createList,
     getListsByUsername,
@@ -153,7 +169,8 @@ module.exports = {
     deleteList,
     getListById,
     retrieveListsWithFilmIdExistance,
-    toggleShowFromWatchlist
+    toggleShowFromWatchlist,
+    getMediaFromWatchlist
 }
 
 // Helper functions

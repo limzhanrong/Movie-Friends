@@ -23,7 +23,7 @@ const style = {
   boxShadow: 24
 };
 
-const AddToWatchListModal = ({handleClose}) => {
+const AddToWatchListModal = ({ handleClose, retrieve }) => {
   let { useAuthState } = React.useContext(AuthContext);
   let { watchListModalState, useUserWatchListState, memoizedFetchUserWatchList } = React.useContext(AddToWatchListModalContext);
   const snackBarDispatch = React.useContext(SnackBarContext).dispatch
@@ -116,7 +116,8 @@ const AddToWatchListModal = ({handleClose}) => {
                 >
                     <FormControlLabel 
                       control={
-                      <CheckBoxCustom 
+                      <CheckBoxCustom
+                        retrieve={retrieve}
                         checked={checked} 
                         watchList={watchList} 
                         watchListModalState={watchListModalState}

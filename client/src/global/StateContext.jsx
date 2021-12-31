@@ -22,19 +22,35 @@ export const AuthProvider = (props) => {
         localStorage.removeItem("token")
     }
 
-    async function fetchUserInfo(token) {
-        try{
-            const response = await serverAPI.post('/api/user/authenticated/getInfo',{
-              token: token
-            })
-            console.log('Fetch user info:', response)
-            if(response){
-                setAuth(auth=>({ ...auth, id: response.data.user_id, token:token, username:response.data.username, authenticated: true}))
-            }
-          }catch(err){
-            console.log("fetch user info failed: " + err)
-          }
-    }
+    const fetchUserInfo = useCallback(
+        async (token) => {
+            try{
+                const response = await serverAPI.post('/api/user/authenticated/getInfo',{
+                  token: token
+                })
+                console.log('Fetch user info:', response)
+                if(response){
+                    setAuth(auth=>({ ...auth, id: response.data.user_id, token:token, username:response.data.username, authenticated: true}))
+                }
+              }catch(err){
+                console.log("fetch user info failed: " + err)
+              }
+        }, []
+    )
+
+    // async function fetchUserInfo(token) {
+    //     try{
+    //         const response = await serverAPI.post('/api/user/authenticated/getInfo',{
+    //           token: token
+    //         })
+    //         console.log('Fetch user info:', response)
+    //         if(response){
+    //             setAuth(auth=>({ ...auth, id: response.data.user_id, token:token, username:response.data.username, authenticated: true}))
+    //         }
+    //       }catch(err){
+    //         console.log("fetch user info failed: " + err)
+    //       }
+    // }
 
     // Adds Axios interceptors for 401 and 403 requests
 
@@ -56,7 +72,7 @@ export const AuthProvider = (props) => {
         return () => {
             serverAPI.interceptors.response.eject(serverInterceptor)
         }
-    }, [])
+    }, [fetchUserInfo])
 
     return (
         <AuthContext.Provider value={{useAuthState: [auth, setAuth], logout: logout, fetchUserInfo:fetchUserInfo}}>
