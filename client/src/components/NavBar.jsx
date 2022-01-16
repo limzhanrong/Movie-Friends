@@ -5,6 +5,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useHistory } from "react-router-dom";
 import {AuthContext} from "../global/StateContext";
 import serverAPI from '../APIs/serverAPI';
+import Search from "./Searchbar";
 
 
 
@@ -56,21 +57,26 @@ export default function NavBar() {
   },[])
 
   return (
-    <Box sx={{ flexGrow: 1}}>
+    <Box sx={{ flexGrow: 1, display:"flex", justifyContent:"space-between" }}>
       <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={()=>redirect('/')}>
-            MovieTwits
-          </Typography>
+        <Toolbar sx={{justifyContent:"space-between"}}>
+          <Box sx={{display:"flex", alignItems:"center"}}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, mr:2 }} onClick={()=>redirect('/')}>
+              MovieTwits
+            </Typography>
+
+            <Search primary sx={{justifyContent:"space-between",justifySelf:"start" }}/>
+          </Box>
+
             <div>
               {auth?.authenticated ? (
                 <>

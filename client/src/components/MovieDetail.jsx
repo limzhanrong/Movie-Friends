@@ -6,8 +6,7 @@ import Rating from './Rating'
 import Loading from './Loading'
 import { convertDate } from '../helpers/HelperFunction'
 
-const MovieDetail = (props) => {
-    const { id, media_type } = props
+const MovieDetail = ({id, media_type}) => {
     const [movieObject, setMovieObject] = React.useState()
     const [image, setImage] = React.useState("")
     const [loading, setLoading] = React.useState(true)

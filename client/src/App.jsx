@@ -16,6 +16,7 @@ import NavBar from "./components/NavBar";
 import Movie from "./routes/Movie";
 import Lists from "./routes/UserLists";
 import ListSingle from "./routes/ListSingle";
+import Search from "./routes/Search";
 
 import {AuthProvider, SnackBarContext} from "./global/StateContext";
 import SnackBarCustom from "./components/SnackBarCustom";
@@ -58,6 +59,7 @@ export default function App() {
             <Route exact path="/login" component={Login}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/u/:username/lists" component={Lists}/>
+            <Route exact path="/search/:media_type" component={Search}/>
             <Route exact path={"/lists/:id"} component={ListSingle}/>
             <Route exact path={["/:media_type/:id"]} component={Movie}/>
             <Route exact path="/" component={Home}/>

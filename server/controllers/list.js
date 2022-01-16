@@ -26,10 +26,12 @@ const getListsByUsername = async (req,res) => {
 // Retrieve all lists owned by an authenticated user and whether the film id is in the watchlist
 // Will retrieve all Lists owned by user, with additional columns list_id, film_id and film_type. Value will be null if show is not in watchlist
 const retrieveListsWithFilmIdExistance = async (req,res) => {
+    // return res.status(404).send(err)
     try{
         const userId = req.user.user_id
         const { filmId, filmType } = req.body
-        const q = "SELECT * FROM lists LEFT JOIN lists_films ON lists.id = lists_films.list_id AND lists.user_id = $1 AND ( (lists_films.film_id = $2 AND lists_films.film_type = $3) OR lists_films.film_id IS NULL)"
+        console.log(filmType)
+        const q = "SELECT * FROM lists LEFT JOIN lists_films ON lists.id = lists_films.list_id AND lists.user_id = $1 AND ( (lists_films.film_id = $2 AND lists_films.film_type = $3) OR lists_films.film_id IS NULL) WHERE lists.user_id = $1"
         const response = await db.query(q, [userId, filmId, filmType]);
         const list = response
         // if(!list) throw "No such list!"

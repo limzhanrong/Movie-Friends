@@ -76,9 +76,29 @@ const getTVById = async (req,res) => {
     }
 }
 
+const getResultsByQuery = async (req,res) => {
+    const { query, page, media_type } = req.params
+    try{
+        str = `https://api.themoviedb.org/3/search/${media_type}?api_key=${key}&query=${query}&page=${page}&include_adult=false`
+        const result =  await axios.get(str)
+        res.status(200).json({
+            status: 'success',
+            results: result.data
+        })
+    }catch(error){
+        console.log('Get Movie by query request failed')
+        console.log(error)
+        return res.status(404).json({
+            status: 'failure',
+            results: error
+        })
+    }
+}
+
 module.exports = {
     getPopularByPage,
     getTrending,
     getMovieById,
-    getTVById
+    getTVById,
+    getResultsByQuery
 }

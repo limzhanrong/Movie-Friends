@@ -26,7 +26,7 @@ const CheckBoxCustom = ({checked, watchList, watchListModalState, snackBarDispat
             let msg
             response.data.action === 'add' ? msg = `Added to ${listName}` : msg = `Removed from ${listName}`
             snackBarDispatch({ type:"OPEN_SUCCESS_SNACKBAR", message:msg })
-            console.log(retrieve)
+            
             if(retrieve){
                 console.log("retrieve")
                 retrieve()

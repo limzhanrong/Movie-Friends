@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import MediaDropDown from './MediaDropDown';
-import { CardActionArea, CardContent, CardMedia, Typography, Card } from '@mui/material';
+import CircularRating from 'components/common/mediacard/CircularRating'
+import { CardActionArea, CardContent, CardMedia, Typography, Card, Box } from '@mui/material';
 import { useHistory } from "react-router-dom"
 
 
@@ -10,7 +11,6 @@ export default function MediaCard({movieObject}) {
   const history = useHistory()
   
   React.useEffect(() => {
-    console.log(movieObject)
     setImage(`https://image.tmdb.org/t/p/w185/${movieObject.poster_path ? movieObject.poster_path: movieObject.profile_path}`)
     const str = `/${movieObject.media_type ? movieObject.media_type : 'movie'}/${movieObject.id}`
     setLink(str)
@@ -35,10 +35,13 @@ export default function MediaCard({movieObject}) {
           alt="Movie Image"
         />      
         <CardContent sx={{minHeight:80}}>
-          {movieObject.vote_average}
+          
           <Typography gutterBottom variant="subtitle2" component="div" fontSize="0.7rem">
             {movieObject.title || movieObject.original_name || movieObject.name}
           </Typography>
+          <Box sx={{position:"absolute", right:0, bottom:0, marginRight:1, marginBottom:1}}>
+            <CircularRating sx={{marginRight:"10px"}} value={movieObject.vote_average}></CircularRating>
+          </Box>
         </CardContent>
       </CardActionArea>
     </Card>

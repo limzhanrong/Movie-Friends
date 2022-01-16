@@ -40,6 +40,7 @@ const TrendingSection = () => {
                     </ToggleButtonGroup>
                     </Grid>
                 </div>
+                {/* MovieSlider */}
                 <MovieSlider endPoint={endPoint}></MovieSlider>
             </div>
     )

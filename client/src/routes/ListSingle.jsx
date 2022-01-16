@@ -12,36 +12,19 @@ import AddToWatchListModal from "../components/AddToWatchListModal"
 import {AddToWatchListModalContext} from "../global/StateContext";
 
 const ListSingle = () => {
-    const numberOfMediaPerPage = 18
+    const numberOfMediaPerPage = 20
     const { id }  = useParams()
     const[list, setList] = useState({})
     const[mediaList, setMediaList] = useState([])
     const[page, setPage] = useState(1)
     const[totalNumberOfPage, setTotalNumberOfPage] = useState(1)
     const[loading,setLoading] = useState(true)
-    // const { useAuthState } = useContext(AuthContext)
-    // const [auth] = useAuthState
-    // const [isOwner, setIsOwner] = useState(false)
     const { watchListModalDispatch } = useContext(AddToWatchListModalContext)
 
     const paginate = useCallback((arrayLength)=>{
-        // alert(arrayLength/numberOfMediaPerPage)
         setTotalNumberOfPage(Math.ceil(arrayLength/numberOfMediaPerPage))
     },[])
-
-
-    // const checkIsOwner = useCallback( (watchlistObject) => {
-    //     const token = localStorage.getItem('token');
-    //     if(token){
-    //         fetchUserInfo(token)
-    //         if (auth?.id === watchlistObject.data.user_id){
-    //             setIsOwner(true)
-    //         }
-    //     }else{
-    //         setIsOwner(false)
-    //     }
-    // },[fetchUserInfo, auth?.id])
-    
+    // Api call and set list
     const retrieve = useCallback(
         async () => {
             try{
@@ -49,7 +32,6 @@ const ListSingle = () => {
                 setList(response.data)
                 const mediaListResponse = await serverAPI.get(`/api/list/public/getMediaFromWatchlist/${id}`)
                 setMediaList(mediaListResponse.data.response)
-                // checkIsOwner(response)
             }catch(err){
                 console.log(err)
             }
