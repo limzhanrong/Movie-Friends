@@ -42,8 +42,8 @@ const Search = () => {
         [media_type,page,query]
     )
     useEffect(()=>{
-        isMounted.current = true
         setLoading(true)
+        isMounted.current = true
         if(isMounted){
             fetchData()
         }

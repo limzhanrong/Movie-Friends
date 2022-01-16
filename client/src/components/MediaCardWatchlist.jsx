@@ -1,8 +1,9 @@
 import React, {useState, useCallback} from 'react';
 import MediaDropDown from './MediaDropDown';
-import { CardActionArea, CardContent, CardMedia, Typography, Card } from '@mui/material';
+import { CardActionArea, CardContent, CardMedia, Typography, Card, Box } from '@mui/material';
 import { useHistory } from "react-router-dom"
 import serverAPI from '../APIs/serverAPI';
+import CircularRating from 'components/common/mediacard/CircularRating';
 import defaultImage from "../assets/default.jpeg"
 
 const MediaCardWatchlist = ({id, media_type }) => {
@@ -60,10 +61,16 @@ const MediaCardWatchlist = ({id, media_type }) => {
             alt="Movie Image"
           />      
           <CardContent sx={{height:80}}>
-            {movieObject.vote_average}
             <Typography gutterBottom variant="subtitle2" component="div" fontSize="0.7rem">
               {movieObject.title || movieObject.original_name || movieObject.name}
             </Typography>
+            {movieObject.vote_average && 
+            (
+              <Box sx={{position:"absolute", right:0, bottom:0, marginRight:1, marginBottom:1}}>
+                <CircularRating sx={{marginRight:"10px"}} value={movieObject.vote_average}></CircularRating>
+              </Box>
+            )
+            }
           </CardContent>
         </CardActionArea>
       </Card>
