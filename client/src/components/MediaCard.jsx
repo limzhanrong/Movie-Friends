@@ -39,9 +39,15 @@ export default function MediaCard({movieObject}) {
           <Typography gutterBottom variant="subtitle2" component="div" fontSize="0.7rem">
             {movieObject.title || movieObject.original_name || movieObject.name}
           </Typography>
-          <Box sx={{position:"absolute", right:0, bottom:0, marginRight:1, marginBottom:1}}>
-            <CircularRating sx={{marginRight:"10px"}} value={movieObject.vote_average}></CircularRating>
-          </Box>
+          {movieObject.vote_average && 
+
+          (
+            <Box sx={{position:"absolute", right:0, bottom:0, marginRight:1, marginBottom:1}}>
+              <CircularRating sx={{marginRight:"10px"}} value={movieObject.vote_average}></CircularRating>
+            </Box>
+          )
+          }
+          
         </CardContent>
       </CardActionArea>
     </Card>
