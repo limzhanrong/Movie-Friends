@@ -1,10 +1,13 @@
 import React, { useState, createContext , useEffect, useReducer, useCallback } from 'react'
 import serverAPI from '../APIs/serverAPI'
 import { reducer, AddToWatchListModalReducer } from './reducer'
+import { useHistory } from "react-router-dom";
+
 
 export const AuthContext = createContext()
 
 export const AuthProvider = (props) => {
+    const history = useHistory();
     const [auth, setAuth] = useState({
         id:'',
         username:'',
@@ -12,7 +15,7 @@ export const AuthProvider = (props) => {
         authenticated: false
     })
     
-    const logout = () =>{
+    const logout =useCallback( () =>{
         setAuth({
             id:'',
             username:'',
@@ -20,7 +23,8 @@ export const AuthProvider = (props) => {
             authenticated: false
         })
         localStorage.removeItem("token")
-    }
+        history.push('/')
+    }, [history])
 
     const fetchUserInfo = useCallback(
         async (token) => {
@@ -72,7 +76,7 @@ export const AuthProvider = (props) => {
         return () => {
             serverAPI.interceptors.response.eject(serverInterceptor)
         }
-    }, [fetchUserInfo])
+    }, [fetchUserInfo, logout])
 
     return (
         <AuthContext.Provider value={{useAuthState: [auth, setAuth], logout: logout, fetchUserInfo:fetchUserInfo}}>
